@@ -1,0 +1,22 @@
+.container {
+    background-color: blueviolet;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    gap: 15px;
+}
+
+.input {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 250px;
+}
+
+.btn {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+   color: black;
+}

@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style-type: none;
+    row-gap: 10px;
+    
+}
+
+.list {
+    width: 400px;
+    height: 400px;
+    
+    
+
+}

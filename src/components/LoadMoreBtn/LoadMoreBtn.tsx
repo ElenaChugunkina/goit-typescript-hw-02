@@ -26,4 +26,5 @@ const LoadMoreBtn: React.FC<LoadMoreBtnProps> = ({ onClick }) => {
   );
 };
 
+
 export default LoadMoreBtn;

@@ -1,9 +1,6 @@
 
 
-
- import React, { useState } from 'react';
-
-
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SearchBar from '../SearchBar/SearchBar';
 import ImageGallery from '../ImageGallery/ImageGallery';
@@ -31,51 +28,49 @@ const App: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
 
-  const handleSearch = async (query: string) => {
-    try {
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (!query) return;
+      
       setLoading(true);
       setError(false);
-      
-      const response = await axios.get('https://api.unsplash.com/search/photos', {
-        params: {
-          query,
-          client_id: 'KJDJyT0_5VIK7I2KooxwjWFSUGsfOWGb6rXeAIJ9OPM',
-          per_page: 12,
-          page: 1,
-        },
-      });
-      setImages(response.data.results);
-      setPage(1);
-      setQuery(query);
-      setTotalPages(response.data.total_pages);
-      
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
+
+      try {
+        const response = await axios.get('https://api.unsplash.com/search/photos', {
+          params: {
+            query,
+            client_id: 'KJDJyT0_5VIK7I2KooxwjWFSUGsfOWGb6rXeAIJ9OPM',
+            per_page: 12,
+            page,
+          },
+        });
+
+        if (page === 1) {
+          setImages(response.data.results);
+        } else {
+          setImages(prevImages => [...prevImages, ...response.data.results]);
+        }
+        
+        setTotalPages(response.data.total_pages);
+
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, [query, page]);
+
+  const handleSearch = (newQuery: string) => {
+    setQuery(newQuery);
+    setPage(1); 
   };
 
-  const handleLoadMoreBtn = async () => {
-    try {
-      setLoading(true);
-      setError(false);
-      
-      const response = await axios.get('https://api.unsplash.com/search/photos', {
-        params: {
-          query,
-          client_id: 'KJDJyT0_5VIK7I2KooxwjWFSUGsfOWGb6rXeAIJ9OPM',
-          per_page: 12,
-          page: page + 1,
-        },
-      });
-      setImages(prevImages => [...prevImages, ...response.data.results]);
+  const handleLoadMoreBtn = () => {
+    if (page < totalPages) {
       setPage(prevPage => prevPage + 1);
-      
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -101,3 +96,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
